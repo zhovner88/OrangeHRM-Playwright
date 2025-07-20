@@ -1,0 +1,34 @@
+{
+  "name": "orangehrm-playwright-automation",
+  "version": "1.0.0",
+  "description": "Professional UI automation testing framework for OrangeHRM using Playwright with advanced design patterns",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug",
+    "test:report": "playwright show-report",
+    "install:browsers": "playwright install",
+    "codegen": "playwright codegen https://opensource-demo.orangehrmlive.com"
+  },
+  "keywords": [
+    "playwright",
+    "automation",
+    "testing",
+    "ui-tests",
+    "orangehrm",
+    "page-object",
+    "design-patterns"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.0"
+  }
+} 
