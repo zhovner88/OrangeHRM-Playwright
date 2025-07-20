@@ -2,7 +2,7 @@
 
 Professional framework for UI test automation of the OrangeHRM web application using Playwright and modern design principles.
 
-## 🎯 Project Goal
+## Project Goal
 
 This project demonstrates a professional approach to test automation using:
 - **Page Object Model (POM)**
@@ -11,7 +11,7 @@ This project demonstrates a professional approach to test automation using:
 - **Facade Pattern**
 - **Strategy Pattern**
 
-## 🏗️ Project Architecture
+## Project Architecture
 
 ```
 OrangeHRM-Playwright-automation/
@@ -40,7 +40,7 @@ OrangeHRM-Playwright-automation/
 └── README.md
 ```
 
-## 🎨 Design Principles
+## Design Principles
 
 ### 1. Singleton Pattern
 **File:** `src/config/environment.ts`
@@ -160,7 +160,7 @@ export class CommonPage extends BasePage {
 }
 ```
 
-## 🚀 Installation and Setup
+## Installation and Setup
 
 ### 1. Install dependencies
 ```bash
@@ -192,7 +192,7 @@ npm run test:headed
 npm run codegen
 ```
 
-## 📋 Configuration
+## Configuration
 
 ### Environment Variables
 Create a `.env` file in the project root:
@@ -214,7 +214,7 @@ The `playwright.config.ts` file is configured for:
 - Mobile devices
 - Report generation (HTML, JSON, JUnit)
 
-## 🧪 Test Structure
+## Test Structure
 
 ### Login Tests (`tests/login.spec.ts`)
 - Authentication testing
@@ -241,7 +241,7 @@ The `playwright.config.ts` file is configured for:
 - Element interactions
 - State checking methods
 
-## 🔧 Main Features
+## Main Features
 
 ### Application Facade
 ```typescript
@@ -288,7 +288,7 @@ authContext.setStrategy(new SSOAuthenticationStrategy());
 authContext.setStrategy(new LDAPAuthenticationStrategy());
 ```
 
-## 📊 Reports
+## Reports
 
 The project generates reports in various formats:
 - **HTML Report**: `test-results/index.html`
@@ -300,7 +300,7 @@ To view HTML report:
 npm run test:report
 ```
 
-## 🎯 Architecture Benefits
+## Architecture Benefits
 
 1. **Scalability**: Easy to add new Page Objects and tests
 2. **Maintainability**: Clear structure and design principles
@@ -308,18 +308,18 @@ npm run test:report
 4. **Flexibility**: Ability to change strategies and factories
 5. **Readability**: Clear code with well-defined structure
 
-## 🛠️ Technologies
+## Technologies
 
 - **Playwright**: Browser automation
 - **TypeScript**: Code typing and safety
 - **Node.js**: Runtime environment
 - **npm**: Dependency management
 
-## 📝 License
+## License
 
 MIT License
 
-## 👨‍💻 Author
+## Author
 
 Created to demonstrate professional test automation skills using modern design principles.
 
