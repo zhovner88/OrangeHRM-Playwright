@@ -211,4 +211,112 @@ export abstract class BasePage {
     await this.page.goForward();
     await this.waitForPageLoad();
   }
+
+  // Alternative locator methods for when pick locator fails
+  async clickByRole(role: string, name?: string): Promise<void> {
+    if (name) {
+      await this.page.getByRole(role as any, { name }).click();
+    } else {
+      await this.page.getByRole(role as any).click();
+    }
+  }
+
+  async clickByText(text: string, exact: boolean = false): Promise<void> {
+    await this.page.getByText(text, { exact }).click();
+  }
+
+  async clickByLabel(label: string): Promise<void> {
+    await this.page.getByLabel(label).click();
+  }
+
+  async clickByTestId(testId: string): Promise<void> {
+    await this.page.getByTestId(testId).click();
+  }
+
+  async fillByRole(role: string, value: string, name?: string): Promise<void> {
+    if (name) {
+      await this.page.getByRole(role as any, { name }).fill(value);
+    } else {
+      await this.page.getByRole(role as any).fill(value);
+    }
+  }
+
+  async fillByLabel(label: string, value: string): Promise<void> {
+    await this.page.getByLabel(label).fill(value);
+  }
+
+  async fillByPlaceholder(placeholder: string, value: string): Promise<void> {
+    await this.page.getByPlaceholder(placeholder).fill(value);
+  }
+
+  async fillByTestId(testId: string, value: string): Promise<void> {
+    await this.page.getByTestId(testId).fill(value);
+  }
+
+  async isVisibleByRole(role: string, name?: string): Promise<boolean> {
+    try {
+      if (name) {
+        await this.page.getByRole(role as any, { name }).waitFor({ state: 'visible', timeout: 500 });
+      } else {
+        await this.page.getByRole(role as any).waitFor({ state: 'visible', timeout: 500 });
+      }
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  async isVisibleByText(text: string, exact: boolean = false): Promise<boolean> {
+    try {
+      await this.page.getByText(text, { exact }).waitFor({ state: 'visible', timeout: 500 });
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  async isVisibleByTestId(testId: string): Promise<boolean> {
+    try {
+      await this.page.getByTestId(testId).waitFor({ state: 'visible', timeout: 500 });
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  // Complex locator strategies
+  async clickByFilteredLocator(baseSelector: string, filterOptions: { hasText?: string, hasRole?: string }): Promise<void> {
+    let locator = this.page.locator(baseSelector);
+    
+    if (filterOptions.hasText) {
+      locator = locator.filter({ hasText: filterOptions.hasText });
+    }
+    
+    await locator.click();
+  }
+
+  async clickByRelativeLocator(parentSelector: string, childSelector: string): Promise<void> {
+    await this.page.locator(parentSelector).locator(childSelector).click();
+  }
+
+  async clickByXPath(xpath: string): Promise<void> {
+    await this.page.locator(`xpath=${xpath}`).click();
+  }
+
+  // Wait methods for alternative locators
+  async waitForElementByRole(role: string, name?: string, timeout: number = 500): Promise<void> {
+    if (name) {
+      await this.page.getByRole(role as any, { name }).waitFor({ timeout });
+    } else {
+      await this.page.getByRole(role as any).waitFor({ timeout });
+    }
+  }
+
+  async waitForElementByText(text: string, exact: boolean = false, timeout: number = 500): Promise<void> {
+    await this.page.getByText(text, { exact }).waitFor({ timeout });
+  }
+
+  async waitForElementByTestId(testId: string, timeout: number = 500): Promise<void> {
+    await this.page.getByTestId(testId).waitFor({ timeout });
+  }
 } 

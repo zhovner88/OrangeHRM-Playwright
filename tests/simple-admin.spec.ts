@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { ApplicationFacade } from '../src/patterns/facade/application-facade';
+import { TestHelpers } from '../src/utils/test-helpers';
 
 test.describe('Simple Admin Tests', () => {
   let app: ApplicationFacade;
@@ -29,16 +30,23 @@ test.describe('Simple Admin Tests', () => {
     // Navigate to job titles
     await app.admin.navigateToJobTitles();
     
+    // Generate unique job title using helper
+    const jobTitleName = TestHelpers.generateUniqueJobTitle();
+    
     // Add job title
     const jobTitleData = {
-      title: 'Test Engineer',
-      description: 'Automation testing specialist'
+      title: jobTitleName,
+      description: 'Test Description'
     };
     
     await app.admin.addJobTitle(jobTitleData);
     
     // Verify job title was added
-    await app.admin.waitForJobTitleToBeAdded('Test Engineer');
+    await app.admin.waitForWorkShiftToBeAddedWithLocator(jobTitleName);
+
+    // Remove job title
+    await app.admin.removeJobTitle(jobTitleName);
+    await app.admin.confirmRemovalOfJobTitle();
   });
   
   test('should navigate to work shifts', async ({ page }) => {
@@ -53,9 +61,12 @@ test.describe('Simple Admin Tests', () => {
     // Navigate to work shifts
     await app.admin.navigateToWorkShifts();
     
+    // Generate unique work shift name using helper
+    const workShiftName = TestHelpers.generateUniqueWorkShiftName();
+    
     // Add work shift
     const workShiftData = {
-      name: 'Day Shift',
+      name: workShiftName,
       hoursFrom: '09:00',
       hoursTo: '17:00'
     };
@@ -63,6 +74,10 @@ test.describe('Simple Admin Tests', () => {
     await app.admin.addWorkShift(workShiftData);
     
     // Verify work shift was added
-    await app.admin.waitForWorkShiftToBeAdded('Day Shift');
+    await app.admin.waitForWorkShiftToBeAddedWithLocator(workShiftName);
+
+    // Remove work shift
+    await app.admin.removeWorkShift(workShiftName);
+    await app.admin.confirmRemovalOfWorkShift();
   });
 }); 

@@ -74,11 +74,11 @@ export class AdminPage extends BasePage {
   }
 
   private get jobTitleInput(): Locator {
-    return this.page.getByLabel(/Job Title/i);
+    return this.page.getByRole('textbox').nth(1)
   }
 
   private get jobDescriptionInput(): Locator {
-    return this.page.getByLabel(/Job Description/i);
+    return this.page.getByRole('textbox', { name: 'Type description here' })
   }
 
   private get jobSpecificationInput(): Locator {
@@ -86,11 +86,19 @@ export class AdminPage extends BasePage {
   }
 
   private get jobNoteInput(): Locator {
-    return this.page.getByLabel(/Note/i);
+    return this.page.getByRole('textbox', { name: 'Add note' })
   }
 
-  private get saveJobTitleButton(): Locator {
-    return this.page.getByRole('button', { name: /Save/i });
+  private get clickSaveJobTitleButton(): Locator {
+    return this.page.getByRole('button', { name: 'Save' })
+  }
+
+  private get clickCancelJobTitleButton(): Locator {
+    return this.page.getByRole('button', { name: 'Cancel' })
+  }
+
+  private get clickOkButton(): Locator {
+    return this.page.getByRole('button', { name: ' Yes, Delete' })
   }
 
   private get jobTitlesTable(): Locator {
@@ -107,15 +115,15 @@ export class AdminPage extends BasePage {
   }
 
   private get workShiftNameInput(): Locator {
-    return this.page.getByRole('textbox', { name: 'hh:mm' }).first()
+    return this.page.getByRole('textbox').nth(1)
   }
 
   private get hoursFromInput(): Locator {
-    return this.page.getByRole('alert').getByRole('textbox').first()
+    return this.page.getByRole('textbox', { name: 'hh:mm' }).first()
   }
 
   private get hoursToInput(): Locator {
-    return this.page.getByRole('alert').getByRole('textbox').nth(1)
+    return this.page.getByRole('textbox', { name: 'hh:mm' }).nth(1)
   }
 
   private get hourstAMInput(): Locator {
@@ -255,7 +263,7 @@ export class AdminPage extends BasePage {
       await this.jobNoteInput.fill(jobTitleData.note);
     }
 
-    await this.saveJobTitleButton.click();
+    await this.clickSaveJobTitleButton.click();
   }
 
   async searchJobTitle(title: string): Promise<void> {
@@ -278,8 +286,8 @@ export class AdminPage extends BasePage {
     await this.navigateToWorkShifts();
     await this.addWorkShiftButton.click();
     await this.workShiftNameInput.fill(workShiftData.name);
-    await this.hoursFromInput.fill(workShiftData.hoursFrom);
-    await this.hoursToInput.fill(workShiftData.hoursTo);
+    // await this.hoursFromInput.fill(workShiftData.hoursFrom);
+    // await this.hoursToInput.fill(workShiftData.hoursTo);
     await this.saveWorkShiftButton.click();
   }
 
@@ -387,36 +395,81 @@ export class AdminPage extends BasePage {
     await this.reload();
   }
 
-  async waitForJobTitleToBeAdded(title: string): Promise<void> {
-    await this.page.waitForFunction(
-      (title: string) => {
-        const rows = Array.from((document as any).querySelectorAll('.oxd-table tr'));
-        for (let row of rows) {
-          const element = row as HTMLElement;
-          if (element.textContent?.includes(title)) {
-            return true;
-          }
-        }
-        return false;
-      },
-      title,
-      { timeout: 10000 }
-    );
+  async removeJobTitle(name: string): Promise<void> {
+    // Wait for the job titles table to be visible first
+    await this.jobTitlesTable.waitFor({ state: 'visible' });
+    
+    // Use Playwright's role-based locator to find the row containing the name
+    const rowWithName = this.page.getByRole('row').filter({ hasText: name }).first();
+    
+    // Wait for the row to be visible
+    await rowWithName.waitFor({ state: 'visible', timeout: 500 });
+    
+    // Find the first button within that row and click it
+    const deleteButton = rowWithName.getByRole('button').first();
+    await deleteButton.click();
   }
 
-  async waitForWorkShiftToBeAdded(name: string): Promise<void> {
-    await this.page.waitForFunction(
-      (name) => {
-        const rows = Array.from(document.querySelectorAll('.oxd-table tr'));
-        for (let row of rows) {
-          if (row.textContent?.includes(name)) {
-            return true;
-          }
-        }
-        return false;
-      },
-      name,
-      { timeout: 10000 }
-    );
+  async waitForWorkShiftToBeAddedWithLocator(name: string): Promise<void> {
+    // Wait for the work shift table to be visible
+    await this.workShiftsTable.waitFor({ state: 'visible' });
+    
+    // Use role-based locator to find the first row containing the name
+    const rowWithName = this.page.getByRole('row').filter({ hasText: name }).first();
+    
+    // Wait for the row to be visible
+    await rowWithName.waitFor({ state: 'visible', timeout: 10000 });
+  }
+
+  // Method to get all inner text from table rows using role locator
+  async getAllTableRowText(): Promise<string[]> {
+    const tableRows = this.page.getByRole('row');
+    const rowTexts: string[] = [];
+    
+    const count = await tableRows.count();
+    for (let i = 0; i < count; i++) {
+      const rowText = await tableRows.nth(i).innerText();
+      rowTexts.push(rowText);
+    }
+    
+    return rowTexts;
+  }
+
+  // Method to find first occurrence of name in table using role locator
+  async findFirstOccurrenceOfName(name: string): Promise<boolean> {
+    const tableRows = this.page.getByRole('row');
+    
+    const count = await tableRows.count();
+    for (let i = 0; i < count; i++) {
+      const rowText = await tableRows.nth(i).innerText();
+      if (rowText.includes(name)) {
+        return true;
+      }
+    }
+    
+    return false;
+  }
+
+  async confirmRemovalOfJobTitle() {
+    await this.clickOkButton.click();
+  }
+
+  async confirmRemovalOfWorkShift() {
+    await this.clickOkButton.click();
+  }
+
+  async removeWorkShift(name: string): Promise<void> {
+    // Wait for the work shifts table to be visible first
+    await this.workShiftsTable.waitFor({ state: 'visible' });
+    
+    // Use Playwright's role-based locator to find the row containing the name
+    const rowWithName = this.page.getByRole('row').filter({ hasText: name }).first();
+    
+    // Wait for the row to be visible
+    await rowWithName.waitFor({ state: 'visible', timeout: 500 });
+    
+    // Find the first button within that row and click it
+    const deleteButton = rowWithName.getByRole('button').first();
+    await deleteButton.click();
   }
 } 

@@ -159,4 +159,85 @@ export class DashboardPage extends BasePage {
   async refreshDashboard(): Promise<void> {
     await this.reload();
   }
+
+  // Alternative locator strategies examples
+  async navigateToAdminAlternative(): Promise<void> {
+    // Method 1: Using role-based locator (most reliable)
+    await this.clickByRole('link', 'Admin');
+    
+    // Method 2: Using text-based locator
+    // await this.clickByText('Admin', true);
+    
+    // Method 3: Using filtered locator
+    // await this.clickByFilteredLocator('.oxd-main-menu-item', { hasText: 'Admin' });
+    
+    // Method 4: Using XPath (when CSS fails)
+    // await this.clickByXPath('//a[contains(text(), "Admin")]');
+  }
+
+  async searchInMenuAlternative(searchTerm: string): Promise<void> {
+    // Method 1: Using placeholder
+    await this.fillByPlaceholder('Search', searchTerm);
+    
+    // Method 2: Using role-based locator
+    // await this.fillByRole('textbox', searchTerm, 'Search');
+    
+    // Method 3: Using test ID (if available)
+    // await this.fillByTestId('menu-search-input', searchTerm);
+  }
+
+  async logoutAlternative(): Promise<void> {
+    // Method 1: Using role-based locator
+    await this.clickByRole('button', 'User dropdown');
+    await this.clickByRole('menuitem', 'Logout');
+    
+    // Method 2: Using text-based locator
+    // await this.clickByText('User dropdown');
+    // await this.clickByText('Logout');
+    
+    // Method 3: Using relative locator
+    // await this.clickByRelativeLocator('.oxd-userdropdown-tab', 'button');
+    // await this.clickByText('Logout');
+  }
+
+  async verifyMenuItemsAlternative(): Promise<void> {
+    // Method 1: Using role-based visibility checks
+    await this.isVisibleByRole('link', 'Admin');
+    await this.isVisibleByRole('link', 'PIM');
+    await this.isVisibleByRole('link', 'Leave');
+    
+    // Method 2: Using text-based visibility checks
+    // await this.isVisibleByText('Admin', true);
+    // await this.isVisibleByText('PIM', true);
+    // await this.isVisibleByText('Leave', true);
+    
+    // Method 3: Using test ID visibility checks (if available)
+    // await this.isVisibleByTestId('admin-menu-item');
+    // await this.isVisibleByTestId('pim-menu-item');
+    // await this.isVisibleByTestId('leave-menu-item');
+  }
+
+  // Complex locator examples
+  async clickSpecificUserInTable(userName: string): Promise<void> {
+    // Method 1: Using filtered locator
+    await this.clickByFilteredLocator('.oxd-table-row', { hasText: userName });
+    
+    // Method 2: Using relative locator
+    // await this.clickByRelativeLocator(`.oxd-table-row:has-text("${userName}")`, 'button');
+    
+    // Method 3: Using XPath with text matching
+    // await this.clickByXPath(`//tr[contains(., "${userName}")]//button`);
+  }
+
+  async fillFormFieldByLabel(fieldLabel: string, value: string): Promise<void> {
+    // Method 1: Using label-based locator
+    await this.fillByLabel(fieldLabel, value);
+    
+    // Method 2: Using role-based locator with name
+    // await this.fillByRole('textbox', value, fieldLabel);
+    
+    // Method 3: Using relative locator to find input near label
+    // await this.clickByRelativeLocator(`label:has-text("${fieldLabel}")`, 'input');
+    // await this.page.keyboard.type(value);
+  }
 } 
